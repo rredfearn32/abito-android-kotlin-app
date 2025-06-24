@@ -11,22 +11,30 @@ import com.example.abito.presentation.screens.GoalsListScreen
 @Composable
 fun AppNavigation(navController: NavHostController) {
     NavHost(navController, startDestination = AppRoutes.GoalsListScreen.route) {
-        composable(AppRoutes.GoalsListScreen.route) {
+        composable(
+            route = AppRoutes.GoalsListScreen.route,
+            enterTransition = { NavigationTransitions.slideHorizontally().first },
+            exitTransition = { NavigationTransitions.slideHorizontally().second }
+        ) {
             GoalsListScreen(
                 onNavigateToGoalStatus = { navController.navigate(AppRoutes.GoalStatusScreen.route) },
                 onNavigateToCreateGoal = { navController.navigate(AppRoutes.CreateGoalScreen.route) }
             )
         }
 
-        composable(AppRoutes.GoalStatusScreen.route) {
+        composable(
+            route = AppRoutes.GoalStatusScreen.route
+        ) {
             GoalStatusScreen(
-                onNavigateBack = { navController.navigate(AppRoutes.GoalsListScreen.route) }
+                onNavigateBack = { navController.popBackStack() }
             )
         }
 
-        composable(AppRoutes.CreateGoalScreen.route) {
+        composable(
+            route = AppRoutes.CreateGoalScreen.route
+        ) {
             CreateGoalScreen(
-                onNavigateBack = { navController.navigate(AppRoutes.GoalsListScreen.route) }
+                onNavigateBack = { navController.popBackStack() }
             )
         }
     }
