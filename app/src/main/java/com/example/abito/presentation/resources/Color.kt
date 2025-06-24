@@ -1,4 +1,4 @@
-package com.example.abito.ui.theme
+package com.example.abito.presentation.resources
 
 import androidx.compose.ui.graphics.Color
 

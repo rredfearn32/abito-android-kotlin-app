@@ -14,7 +14,7 @@
         android:theme="@style/Theme.Abito"
         tools:targetApi="36">
         <activity
-            android:name=".presentation.Home"
+            android:name=".presentation.MainActivity"
             android:allowBackup="true"
             android:exported="true"
             android:label="@string/app_name"
