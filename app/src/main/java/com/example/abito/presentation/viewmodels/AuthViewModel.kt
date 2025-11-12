@@ -1,13 +1,12 @@
 package com.example.abito.presentation.viewmodels
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.abito.domain.auth.AuthData
-import com.example.abito.domain.repository.AbitoRepository
+import com.example.abito.domain.auth.LoginUseCase
 import com.plcoding.weatherapp.domain.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -15,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val repository: AbitoRepository
+    private val loginUseCase: LoginUseCase
 ) : ViewModel() {
     var state by mutableStateOf(AuthState())
         private set
@@ -24,16 +23,16 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             state = state.copy(isLoading = true, error = null)
 
-            when (val result = repository.login(
-                username = username,
-                password = password
+            when (val result = loginUseCase(
+                username,
+                password
             )) {
                 is Resource.Success -> {
-                    Log.d("accessToken", result.data!!.accessToken)
+                    val data = result.data!!
                     state = state.copy(
                         auth = AuthData(
-                            accessToken = result.data.accessToken,
-                            username = result.data.username
+                            accessToken = data.accessToken,
+                            username = data.username
                         ),
                         isLoading = false,
                         error = null
