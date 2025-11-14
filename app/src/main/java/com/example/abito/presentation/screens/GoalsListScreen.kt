@@ -40,14 +40,6 @@ fun GoalsListScreen(
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-//
-//        Button(
-//            onClick = onNavigateToGoalStatus,
-//            modifier = Modifier.fillMaxWidth()
-//        ) {
-//            Text(text = "View Test Goal Status")
-//        }
-//        Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = onNavigateToCreateGoal,
