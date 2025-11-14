@@ -32,7 +32,14 @@ fun AppNavigation(navController: NavHostController) {
             route = AppRoutes.LoginScreen.route
         ) {
             LoginScreen(
-                onNavigateToGoalsList = { navController.navigate(AppRoutes.GoalsListScreen.route) }
+                onNavigateToGoalsList = {
+                    navController.navigate(AppRoutes.GoalsListScreen.route) {
+                        popUpTo(
+                            AppRoutes.LoginScreen.route
+                        ) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
             )
         }
 
