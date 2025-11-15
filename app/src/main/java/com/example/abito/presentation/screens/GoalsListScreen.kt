@@ -62,11 +62,16 @@ fun GoalsListScreen(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     items(state.goals, key = { it.id }) { goal ->
-                        Text(
-                            text = goal.title,
-                            fontSize = 18.sp,
+                        Button(
+                            onClick = onNavigateToGoalStatus,
                             modifier = Modifier.fillMaxWidth()
-                        )
+                        ) {
+                            Text(
+                                text = goal.title,
+                                fontSize = 18.sp,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
                         Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
