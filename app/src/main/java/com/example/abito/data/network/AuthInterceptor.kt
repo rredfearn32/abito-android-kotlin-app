@@ -1,6 +1,7 @@
 package com.example.abito.data.network
 
 import android.util.Log
+import com.example.abito.data.auth.TokenType
 import com.example.abito.domain.auth.TokenRepository
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -12,8 +13,8 @@ class AuthInterceptor @Inject constructor(
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val original = chain.request()
-        val token = runBlocking { tokenRepository.get() }
-        
+        val token = runBlocking { tokenRepository.get(TokenType.ACCESS) }
+
         Log.d("AuthInterceptor", "Token: $token")
 
         val request = if (!token.isNullOrBlank()) {

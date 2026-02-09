@@ -2,6 +2,7 @@ package com.example.abito.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.abito.data.auth.TokenType
 import com.example.abito.domain.auth.TokenRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +25,7 @@ class StartupViewModel @Inject constructor(
 
     private fun checkAuthentication() {
         viewModelScope.launch {
-            val token = tokenRepository.get()
+            val token = tokenRepository.get(TokenType.ACCESS)
             _isAuthenticated.value = !token.isNullOrBlank()
         }
     }

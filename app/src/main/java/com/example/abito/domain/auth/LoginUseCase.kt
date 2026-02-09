@@ -1,5 +1,6 @@
 package com.example.abito.domain.auth
 
+import com.example.abito.data.auth.TokenType
 import com.example.abito.domain.repository.AbitoRepository
 import com.plcoding.weatherapp.domain.util.Resource
 import javax.inject.Inject
@@ -12,7 +13,7 @@ class LoginUseCase @Inject constructor(
         return when (val result = repository.login(username, password)) {
             is Resource.Success -> {
                 val data = result.data!!
-                tokenRepository.save(data.accessToken)
+                tokenRepository.save(data.accessToken, TokenType.ACCESS)
                 Resource.Success(AuthData(data.accessToken, data.username))
             }
 

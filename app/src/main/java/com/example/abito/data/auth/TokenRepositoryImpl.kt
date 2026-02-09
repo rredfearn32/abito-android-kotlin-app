@@ -20,34 +20,32 @@ class TokenRepositoryImpl @Inject constructor(
         context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
     }
 
-    private val KEY_ACCESS_TOKEN = "access_token"
-
-    override suspend fun save(token: String) {
+    override suspend fun save(token: String, tokenType: TokenType) {
         Log.d("TokenRepositoryImpl", "Saving token: $token")
         withContext(Dispatchers.IO) {
-            prefs.edit { putString(KEY_ACCESS_TOKEN, token) }
+            prefs.edit { putString(tokenType.key, token) }
         }
     }
 
-    override suspend fun get(): String? = withContext(Dispatchers.IO) {
-        prefs.getString(KEY_ACCESS_TOKEN, null)
+    override suspend fun get(tokenType: TokenType): String? = withContext(Dispatchers.IO) {
+        prefs.getString(tokenType.key, null)
     }
 
-    override fun observe(): Flow<String?> = callbackFlow {
-        trySend(prefs.getString(KEY_ACCESS_TOKEN, null))
+    override fun observe(tokenType: TokenType): Flow<String?> = callbackFlow {
+        trySend(prefs.getString(tokenType.key, null))
 
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            if (key == KEY_ACCESS_TOKEN) {
-                trySend(prefs.getString(KEY_ACCESS_TOKEN, null))
+            if (key == tokenType.key) {
+                trySend(prefs.getString(tokenType.key, null))
             }
         }
         prefs.registerOnSharedPreferenceChangeListener(listener)
         awaitClose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
     }
 
-    override suspend fun clear() {
+    override suspend fun clear(tokenType: TokenType) {
         withContext(Dispatchers.IO) {
-            prefs.edit().remove(KEY_ACCESS_TOKEN).apply()
+            prefs.edit { remove(tokenType.key) }
         }
     }
 }
