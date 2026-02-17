@@ -14,6 +14,7 @@ class LoginUseCase @Inject constructor(
             is Resource.Success -> {
                 val data = result.data!!
                 tokenRepository.save(data.accessToken, TokenType.ACCESS)
+                tokenRepository.save(data.refreshToken, TokenType.REFRESH)
                 Resource.Success(AuthData(data.accessToken, data.username))
             }
 
