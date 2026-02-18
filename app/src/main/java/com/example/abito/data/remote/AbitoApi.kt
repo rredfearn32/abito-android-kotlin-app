@@ -10,6 +10,11 @@ interface AbitoApi {
         @Body body: LoginRequest
     ): LoginResponse
 
+    @POST("/auth/refresh")
+    suspend fun refresh(
+        @Body body: RefreshRequest
+    ): RefreshResponse
+
     @GET("/goals")
     suspend fun getGoals(): List<GoalDto>
 }
