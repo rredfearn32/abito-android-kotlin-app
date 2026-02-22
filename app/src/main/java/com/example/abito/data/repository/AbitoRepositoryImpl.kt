@@ -1,6 +1,7 @@
 package com.example.abito.data.repository
 
 import com.example.abito.data.remote.AbitoApi
+import com.example.abito.data.remote.CreateGoalDto
 import com.example.abito.data.remote.GoalDto
 import com.example.abito.data.remote.LoginRequest
 import com.example.abito.data.remote.LoginResponse
@@ -37,6 +38,28 @@ class AbitoRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.Error(e.message ?: "An unknown error occurred.")
+        }
+    }
+
+    override suspend fun createGoal(title: String): Resource<Goal> {
+        return try {
+            Resource.Success(
+                data = api.createGoal(CreateGoalDto(title = title)).toDomain()
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Error(e.message ?: "An unknown error occurred during goal creation..")
+        }
+    }
+
+    override suspend fun deleteGoal(goalId: Long): Resource<Goal> {
+        return try {
+            Resource.Success(
+                data = api.deleteGoal(goalId).toDomain()
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Error(e.message ?: "An unknown error occurred during goal deletion..")
         }
     }
 }

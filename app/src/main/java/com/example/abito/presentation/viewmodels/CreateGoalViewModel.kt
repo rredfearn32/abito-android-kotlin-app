@@ -5,39 +5,38 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.abito.domain.model.Goal
-import com.example.abito.domain.usecase.GetGoalsUseCase
+import com.example.abito.domain.usecase.CreateGoalUseCase
 import com.plcoding.weatherapp.domain.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class GoalsListUiState(
+data class CreateGoalUiState(
     val isLoading: Boolean = false,
     val error: String? = null,
-    val goals: List<Goal> = emptyList()
+    val isSuccess: Boolean = false
 )
 
 @HiltViewModel
-class GoalsListViewModel @Inject constructor(
-    private val getGoalsUseCase: GetGoalsUseCase
+class CreateGoalViewModel @Inject constructor(
+    private val createGoalUseCase: CreateGoalUseCase
 ) : ViewModel() {
-
-    var uiState by mutableStateOf(GoalsListUiState())
+    var uiState by mutableStateOf(CreateGoalUiState())
         private set
 
-    fun refresh() {
+    fun createGoal(title: String) {
         viewModelScope.launch {
             uiState = uiState.copy(isLoading = true, error = null)
-            when (val result = getGoalsUseCase()) {
-                is Resource.Success -> {
+
+            when (val result = createGoalUseCase(title)) {
+                is Resource.Success<*> -> {
                     uiState = uiState.copy(
                         isLoading = false,
-                        goals = result.data.orEmpty()
+                        isSuccess = true
                     )
                 }
 
-                is Resource.Error -> {
+                is Resource.Error<*> -> {
                     uiState = uiState.copy(
                         isLoading = false,
                         error = result.message ?: "Something went wrong"
