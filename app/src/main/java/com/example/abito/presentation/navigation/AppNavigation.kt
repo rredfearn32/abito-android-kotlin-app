@@ -2,8 +2,10 @@ package com.example.abito.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.abito.presentation.screens.CreateGoalScreen
 import com.example.abito.presentation.screens.GoalStatusScreen
 import com.example.abito.presentation.screens.GoalsListScreen
@@ -47,15 +49,20 @@ fun AppNavigation(navController: NavHostController) {
             route = AppRoutes.GoalsListScreen.route
         ) {
             GoalsListScreen(
-                onNavigateToGoalStatus = { navController.navigate(AppRoutes.GoalStatusScreen.route) },
+                onNavigateToGoalStatus = { goalId ->
+                    navController.navigate(AppRoutes.GoalStatusScreen.createRoute(goalId))
+                },
                 onNavigateToCreateGoal = { navController.navigate(AppRoutes.CreateGoalScreen.route) }
             )
         }
 
         composable(
-            route = AppRoutes.GoalStatusScreen.route
-        ) {
+            route = AppRoutes.GoalStatusScreen.route,
+            arguments = listOf(navArgument("goalId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val goalId = backStackEntry.arguments?.getInt("goalId") ?: 0
             GoalStatusScreen(
+                goalId = goalId,
                 onNavigateBack = { navController.popBackStack() }
             )
         }

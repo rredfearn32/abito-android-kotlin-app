@@ -12,21 +12,32 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.abito.presentation.viewmodels.GoalsListViewModel
 
 @Composable
 fun GoalsListScreen(
-    onNavigateToGoalStatus: () -> Unit,
+    onNavigateToGoalStatus: (Long) -> Unit,
     onNavigateToCreateGoal: () -> Unit,
     viewModel: GoalsListViewModel = hiltViewModel()
 ) {
     val state by lazy { viewModel.uiState }
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            viewModel.refresh()
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -63,7 +74,7 @@ fun GoalsListScreen(
                 ) {
                     items(state.goals, key = { it.id }) { goal ->
                         Button(
-                            onClick = onNavigateToGoalStatus,
+                            onClick = { onNavigateToGoalStatus(goal.id) },
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(
