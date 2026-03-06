@@ -29,4 +29,10 @@ interface AbitoApi {
     suspend fun deleteGoal(
         @Path("goalId") goalId: Long
     ): GoalDto
+
+    @POST("/goals/{goalId}/streaks")
+    suspend fun createStreak(
+        @Path("goalId") goalId: Long,
+        @Body body: CreateStreakDto
+    ): StreakDto
 }
