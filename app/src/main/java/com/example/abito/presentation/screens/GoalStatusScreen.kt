@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.abito.data.remote.StreakType
 import com.example.abito.presentation.viewmodels.GoalStatusViewModel
 
 @Composable
@@ -25,9 +26,15 @@ fun GoalStatusScreen(
 ) {
     val goalStatusViewModel: GoalStatusViewModel = hiltViewModel()
 
-    fun handleInput(goalIdToDelete: Long) {
+    fun handleDeleteGoalInput(goalIdToDelete: Long) {
         goalStatusViewModel.deleteGoal(goalIdToDelete)
     }
+
+    fun handleCreateStreakInput(goalId: Long, streakType: StreakType) =
+        goalStatusViewModel.createStreak(
+            goalId = goalId,
+            streakType = streakType
+        )
 
     LaunchedEffect(goalStatusViewModel.uiState.isSuccess) {
         if (goalStatusViewModel.uiState.isSuccess) {
@@ -53,7 +60,14 @@ fun GoalStatusScreen(
         Spacer(modifier = Modifier.height(32.dp))
 
         Button(
-            onClick = { handleInput(goalId.toLong()) },
+            onClick = { handleCreateStreakInput(goalId.toLong(), StreakType.START) },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Delete Goal")
+        }
+
+        Button(
+            onClick = { handleDeleteGoalInput(goalId.toLong()) },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Delete Goal")
