@@ -5,49 +5,90 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.abito.data.remote.StreakType
+import com.example.abito.domain.model.Goal
+import com.example.abito.domain.model.GoalId
+import com.example.abito.domain.model.StreakId
 import com.example.abito.domain.usecase.CreateStreakUseCase
 import com.example.abito.domain.usecase.DeleteGoalUseCase
-import com.plcoding.weatherapp.domain.util.Resource
+import com.example.abito.domain.usecase.EndStopStreakUseCase
+import com.example.abito.domain.usecase.GetGoalUseCase
+import com.example.abito.domain.usecase.UpdateStartStreakUseCase
+import com.example.abito.domain.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class GoalStatusUiState(
+    val goal: Goal? = null,
     val isLoading: Boolean = false,
-    val error: String? = null,
+    val errorMessage: String? = null,
     val isSuccess: Boolean = false
 )
 
 @HiltViewModel
 class GoalStatusViewModel @Inject constructor(
     private val deleteGoalUseCase: DeleteGoalUseCase,
-    private val createStreakUseCase: CreateStreakUseCase
+    private val createStreakUseCase: CreateStreakUseCase,
+    private val getGoalUseCase: GetGoalUseCase,
+    private val updateStartStreakUseCase: UpdateStartStreakUseCase,
+    private val endStopStreakUseCase: EndStopStreakUseCase
 ) : ViewModel() {
     var uiState by mutableStateOf(GoalStatusUiState())
         private set
 
-    fun createStreak(goalId: Long, streakType: StreakType) {
+    fun getGoal(goalId: GoalId) {
         viewModelScope.launch {
-            uiState = uiState.copy(isLoading = true, error = null)
-            when (val result = createStreakUseCase(goalId, streakType)) {
+            uiState = uiState.copy(isLoading = true, errorMessage = null)
+            when (val result = getGoalUseCase(goalId)) {
                 is Resource.Success -> {
-                    uiState = uiState.copy(isLoading = false, isSuccess = true)
+                    uiState = uiState.copy(goal = result.data, isLoading = false, isSuccess = true)
                 }
 
                 is Resource.Error -> {
                     uiState = uiState.copy(
                         isLoading = false,
-                        error = result.message ?: "Something went wrong creating a streak"
+                        errorMessage = result.message
                     )
                 }
             }
         }
     }
 
-    fun deleteGoal(goalId: Long) {
+    fun createStreak(goalId: GoalId) {
         viewModelScope.launch {
-            uiState = uiState.copy(isLoading = true, error = null)
+            uiState = uiState.copy(isLoading = true, errorMessage = null)
+            when (val result = createStreakUseCase(goalId)) {
+                is Resource.Success -> {
+                    when (val goalResult = getGoalUseCase(goalId)) {
+                        is Resource.Success -> uiState =
+                            uiState.copy(
+                                goal = goalResult.data,
+                                isLoading = false,
+                                isSuccess = true
+                            )
+
+                        is Resource.Error -> {
+                            uiState = uiState.copy(
+                                isLoading = false,
+                                errorMessage = goalResult.message
+                            )
+                        }
+                    }
+                }
+
+                is Resource.Error -> {
+                    uiState = uiState.copy(
+                        isLoading = false,
+                        errorMessage = result.message
+                    )
+                }
+            }
+        }
+    }
+
+    fun deleteGoal(goalId: GoalId) {
+        viewModelScope.launch {
+            uiState = uiState.copy(isLoading = true, errorMessage = null)
             when (val result = deleteGoalUseCase(goalId)) {
                 is Resource.Success -> {
                     uiState = uiState.copy(isLoading = false, isSuccess = true)
@@ -56,7 +97,47 @@ class GoalStatusViewModel @Inject constructor(
                 is Resource.Error -> {
                     uiState = uiState.copy(
                         isLoading = false,
-                        error = result.message ?: "Something went wrong deleting a goal"
+                        errorMessage = result.message
+                    )
+                }
+            }
+        }
+    }
+
+    fun updateStartStreak(goalId: GoalId, streakId: StreakId) {
+        viewModelScope.launch {
+            uiState = uiState.copy(isLoading = true, errorMessage = null)
+            when (val result = updateStartStreakUseCase(goalId, streakId)) {
+                is Resource.Success -> {
+                    uiState = uiState.copy(
+                        isLoading = false,
+                    )
+                }
+
+                is Resource.Error -> {
+                    uiState = uiState.copy(
+                        isLoading = false,
+                        errorMessage = result.message
+                    )
+                }
+            }
+        }
+    }
+
+    fun endStopStreak(goalId: GoalId, streakId: StreakId) {
+        viewModelScope.launch {
+            uiState = uiState.copy(isLoading = true, errorMessage = null)
+            when (val result = endStopStreakUseCase(goalId, streakId)) {
+                is Resource.Success -> {
+                    uiState = uiState.copy(
+                        isLoading = false,
+                    )
+                }
+
+                is Resource.Error -> {
+                    uiState = uiState.copy(
+                        isLoading = false,
+                        errorMessage = result.message
                     )
                 }
             }

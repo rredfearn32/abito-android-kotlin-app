@@ -1,9 +1,9 @@
 package com.example.abito.data.network
 
-import com.example.abito.data.auth.TokenType
 import com.example.abito.data.remote.AbitoApi
-import com.example.abito.data.remote.RefreshRequest
+import com.example.abito.data.remote.auth.RefreshRequestDto
 import com.example.abito.domain.auth.TokenRepository
+import com.example.abito.domain.auth.TokenType
 import dagger.Lazy
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
@@ -22,7 +22,7 @@ class TokenAuthenticator @Inject constructor(
         val newTokens = runBlocking {
             val refreshToken = tokenRepository.get(TokenType.REFRESH) ?: return@runBlocking null
             // Call your refresh endpoint
-            refreshApi.get().refresh(RefreshRequest(refreshToken))
+            refreshApi.get().refresh(RefreshRequestDto(refreshToken))
         }
 
         if (newTokens == null) return null

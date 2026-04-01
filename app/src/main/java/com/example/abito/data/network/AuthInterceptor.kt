@@ -1,8 +1,8 @@
 package com.example.abito.data.network
 
 import android.util.Log
-import com.example.abito.data.auth.TokenType
 import com.example.abito.domain.auth.TokenRepository
+import com.example.abito.domain.auth.TokenType
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response

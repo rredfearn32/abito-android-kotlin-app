@@ -1,6 +1,5 @@
 package com.example.abito.domain.auth
 
-import com.example.abito.data.auth.TokenType
 import kotlinx.coroutines.flow.Flow
 
 interface TokenRepository {
