@@ -1,4 +1,4 @@
-package com.example.abito.presentation.screens
+package com.example.abito.presentation.screens.startup
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +28,11 @@ fun StartupScreen(
         }
     }
 
+    StartupContent()
+}
+
+@Composable
+fun StartupContent() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center

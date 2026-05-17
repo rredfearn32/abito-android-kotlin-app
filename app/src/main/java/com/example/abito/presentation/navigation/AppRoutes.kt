@@ -1,19 +1,15 @@
 package com.example.abito.presentation.navigation
 
-enum class SCREENS {
-    STARTUP,
-    LOGIN,
-    GOALS_LIST,
-    CREATE_GOAL
-}
+import com.example.abito.domain.model.GoalId
 
 sealed class AppRoutes(val route: String) {
-    object StartupScreen : AppRoutes(SCREENS.STARTUP.name)
-    object LoginScreen : AppRoutes(SCREENS.LOGIN.name)
-    object GoalsListScreen : AppRoutes(SCREENS.GOALS_LIST.name)
+    object StartupScreen : AppRoutes("STARTUP")
+    object RegisterScreen : AppRoutes("REGISTER")
+    object LoginScreen : AppRoutes("LOGIN")
+    object GoalsListScreen : AppRoutes("GOALS_LIST")
     object GoalStatusScreen : AppRoutes("GOAL_STATUS/{goalId}") {
-        fun createRoute(goalId: Long) = "GOAL_STATUS/$goalId"
+        fun createRoute(goalId: GoalId) = "GOAL_STATUS/${goalId.value}"
     }
 
-    object CreateGoalScreen : AppRoutes(SCREENS.CREATE_GOAL.name)
+    object CreateGoalScreen : AppRoutes("CREATE_GOAL")
 }
