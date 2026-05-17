@@ -5,8 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.abito.domain.model.GoalType
 import com.example.abito.domain.usecase.CreateGoalUseCase
-import com.plcoding.weatherapp.domain.util.Resource
+import com.example.abito.domain.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,11 +25,11 @@ class CreateGoalViewModel @Inject constructor(
     var uiState by mutableStateOf(CreateGoalUiState())
         private set
 
-    fun createGoal(title: String) {
+    fun createGoal(title: String, type: GoalType) {
         viewModelScope.launch {
             uiState = uiState.copy(isLoading = true, error = null)
 
-            when (val result = createGoalUseCase(title)) {
+            when (val result = createGoalUseCase(title, type)) {
                 is Resource.Success<*> -> {
                     uiState = uiState.copy(
                         isLoading = false,
@@ -39,7 +40,7 @@ class CreateGoalViewModel @Inject constructor(
                 is Resource.Error<*> -> {
                     uiState = uiState.copy(
                         isLoading = false,
-                        error = result.message ?: "Something went wrong"
+                        error = result.message
                     )
                 }
             }
