@@ -1,8 +1,10 @@
-package com.example.abito.domain.auth
+package com.example.abito.domain.usecase
 
-import com.example.abito.data.auth.TokenType
+import com.example.abito.domain.auth.AuthData
+import com.example.abito.domain.auth.TokenRepository
+import com.example.abito.domain.auth.TokenType
 import com.example.abito.domain.repository.AbitoRepository
-import com.plcoding.weatherapp.domain.util.Resource
+import com.example.abito.domain.util.Resource
 import javax.inject.Inject
 
 class LoginUseCase @Inject constructor(
@@ -12,15 +14,21 @@ class LoginUseCase @Inject constructor(
     suspend operator fun invoke(username: String, password: String): Resource<AuthData> {
         return when (val result = repository.login(username, password)) {
             is Resource.Success -> {
-                val data = result.data!!
+                val data = result.data
                 tokenRepository.save(data.accessToken, TokenType.ACCESS)
                 tokenRepository.save(data.refreshToken, TokenType.REFRESH)
-                Resource.Success(AuthData(data.accessToken, data.username))
+                Resource.Success(
+                    AuthData(
+                        data.userId,
+                        data.username,
+                        data.accessToken,
+                        data.refreshToken
+                    )
+                )
             }
 
             is Resource.Error -> {
-                val errorMessage = result.message ?: "Unknown Error"
-                Resource.Error(errorMessage)
+                Resource.Error(result.message)
             }
         }
     }
