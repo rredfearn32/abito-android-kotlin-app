@@ -1,4 +1,4 @@
-package com.example.abito.data.auth
+package com.example.abito.domain.auth
 
 enum class TokenType(val key: String) {
     ACCESS("access_token"),

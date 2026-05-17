@@ -1,9 +1,9 @@
 package com.example.abito.data.network
 
-import com.example.abito.data.auth.TokenType
 import com.example.abito.data.remote.AbitoApi
 import com.example.abito.data.remote.RefreshRequest
 import com.example.abito.domain.auth.TokenRepository
+import com.example.abito.domain.auth.TokenType
 import dagger.Lazy
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator

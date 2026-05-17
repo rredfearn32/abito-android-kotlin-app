@@ -1,6 +1,6 @@
 package com.example.abito.di
 
-import com.example.abito.data.auth.TokenRepositoryImpl
+import com.example.abito.data.local.TokenRepositoryImpl
 import com.example.abito.domain.auth.LoginUseCase
 import com.example.abito.domain.auth.TokenRepository
 import com.example.abito.domain.repository.AbitoRepository

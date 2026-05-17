@@ -1,10 +1,11 @@
-package com.example.abito.data.auth
+package com.example.abito.data.local
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.core.content.edit
 import com.example.abito.domain.auth.TokenRepository
+import com.example.abito.domain.auth.TokenType
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
